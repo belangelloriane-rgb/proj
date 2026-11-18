@@ -221,7 +221,9 @@ app.delete('/api/loans/:id', wrap(async (req, res) => {
 app.use('/api', (req, res) => bad(res, 'Not found.', 404));
 app.use((err, req, res, next) => {
   console.error(err);
-  res.status(500).json({ error: 'Something went wrong on the server.' });
+  // TEMPORARY: include the cause so deployment problems are easy to diagnose. Remove once it works.
+  const cause = [err.code, err.message].filter(Boolean).join(' - ');
+  res.status(500).json({ error: `Something went wrong on the server. [${cause}]` });
 });
 
 // ---------- start ----------
